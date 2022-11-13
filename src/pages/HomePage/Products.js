@@ -27,7 +27,7 @@ const Products = () => {
             <Typography variant="h3" className={css({ textAlign: 'center', marginBottom: theme.spacing(4) })}>Products</Typography>
             <StickyContainer>
                 <Grid container spacing={4}>
-                    <Grid item md={4}>
+                    {false && (<Grid item md={4} >
                         <Sticky>
                             {({ style }) => (
                                 <div style={style}>
@@ -75,16 +75,15 @@ const Products = () => {
                                 </div>
                             )}
                         </Sticky>
-
-                    </Grid>
-                    <Grid item md={8}>
+                    </Grid>)}
+                    <Grid item md={12}>
                         <Grid container spacing={4}>
                             {products.map(product => {
                                 return (
-                                    <Grid item md={4} key={product.id}>
+                                    <Grid item md={3} xs={6} key={product.id}>
                                         <Card>
                                             <div className={css({
-                                                height: 300,
+                                                height: 200,
                                                 backgroundImage: `url(${product.image})`,
                                                 backgroundSize: 'contain',
                                                 backgroundPosition: 'center',
