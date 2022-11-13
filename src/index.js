@@ -1,14 +1,22 @@
-import React from 'react';
+import { ThemeProvider } from '@mui/material';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
+import { theme } from './configs/theme';
 import reportWebVitals from './reportWebVitals';
+import { RouterProvider } from "react-router-dom";
+import { router } from './router';
+import App from './App';
+import './assets/css/app.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <ThemeProvider theme={theme}>
+    <App>
+      <Suspense fallback={<div>loading..</div>}>
+        <RouterProvider router={router} />
+      </Suspense>
+    </App>
+  </ThemeProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
