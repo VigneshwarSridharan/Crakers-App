@@ -1,5 +1,5 @@
 import { css } from "@emotion/css"
-import { Accordion, AccordionDetails, AccordionSummary, Box, Card, CardContent, CardMedia, Checkbox, Container, FormControlLabel, FormGroup, Grid, Paper, Slider, Typography } from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, Checkbox, FormControlLabel, FormGroup, Grid, Slider, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import { theme } from "../../configs/theme"
 import CategoriesModel from "../../models/CategoriesModel"

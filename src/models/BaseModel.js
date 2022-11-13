@@ -1,4 +1,3 @@
-import { async } from "@firebase/util";
 import * as firestore from "firebase/firestore";
 import { db } from "../firebase";
 
@@ -95,7 +94,7 @@ class BaseModel {
             if (data.id) {
                 delete data.id
             }
-            let snapshot = await firestore.setDoc(docRef, data)
+            await firestore.setDoc(docRef, data)
 
             return this.#sendSucces(data)
         }
