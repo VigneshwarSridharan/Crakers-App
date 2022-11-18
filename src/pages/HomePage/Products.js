@@ -153,14 +153,14 @@ const Products = () => {
         <>
             <section className={wrapperCSS}>
 
-                <Typography variant="h3" className={css({ textAlign: 'center', marginBottom: theme.spacing(4) })}>Products</Typography>
+                <Typography variant="h5" className={css({ textAlign: 'center', marginBottom: theme.spacing(4) })}>Products</Typography>
 
                 {categories.map(category => {
                     let products = productsByCategory[category.id] || []
                     return (
                         <>
-                            <Typography variant="h5" mb={4} p={3} >{category.name}</Typography>
-                            <Grid container key={category.id} spacing={1} mb={8}>
+                            {/* <Typography variant="h6" mb={4} p={3} >{category.name}</Typography> */}
+                            <Grid container key={category.id} spacing={1} mb={1}>
                                 {products.map(product => {
                                     return (
                                         <Grid item md={3} xs={12} key={product.id}>
@@ -170,13 +170,20 @@ const Products = () => {
                                                 alignItems: 'center',
                                                 padding: 4
                                             })}>
-                                                <div className={css({ marginRight: theme.spacing(2) })}>
+                                                <div className={css({ marginRight: 8 })}>
                                                     <div className={getPreviewCss(product.name, 80)} />
                                                 </div>
-                                                <div>
+                                                <div className={css({width:'100%'})}>
                                                     <Typography variant="body1">{product.name}</Typography>
-                                                    <Typography variant="body2" color={theme.palette.primary.main} mb={2}>{formatCurrency(product.price)} / {product.content}</Typography>
-                                                    <Counter value={cart[product.id]?.quantity} onChange={(quantity) => addToCart(product, quantity)} />
+                                                    <div className={css({ display: 'flex', alignItems:'center', justifyContent:'space-between' })}>
+                                                        <div>
+                                                            <Typography color={"gray"}>{category.name}</Typography>
+                                                            <Typography variant="body2" color={theme.palette.primary.main} mb={2}>{formatCurrency(product.price)} / {product.content}</Typography>
+                                                        </div>
+                                                        <div className={css({marginRight:8})}>
+                                                            <Counter value={cart[product.id]?.quantity} onChange={(quantity) => addToCart(product, quantity)} />
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </Paper>
                                         </Grid>
@@ -188,13 +195,13 @@ const Products = () => {
                 })}
 
             </section>
-            <section className={wrapperCSS}>
+            {false && <section className={wrapperCSS}>
                 <Typography variant="h3" className={css({ textAlign: 'center', marginBottom: theme.spacing(4) })} p={3} mb={8}>Cart</Typography>
 
                 <Grid container spacing={4}>
                     <Grid item md={6}>
                         <TableContainer component={Paper}>
-                            <Table aria-label="simple table">
+                            <Table aria-label="simple table" style={{}}>
                                 <TableHead>
                                     <TableRow>
                                         <TableCell align="left">Item</TableCell>
@@ -320,7 +327,7 @@ const Products = () => {
                     </Grid>
                 </Grid>
 
-            </section>
+            </section>}
         </>
     )
 }
