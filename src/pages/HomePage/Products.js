@@ -7,12 +7,43 @@ import ProductsModel from "../../models/ProductsModel"
 import { grey } from "@mui/material/colors"
 import Counter from "../../compoents/Counter"
 import { paramCase } from "change-case"
+import countries from "./Countries.json"
+import * as Yup from 'yup';
+import {
+    Form,
+    FormikProvider,
+    useFormik,
+} from 'formik';
 
 
 const wrapperCSS = css({
     padding: theme.spacing(8, 4),
     backgroundColor: grey.A100
 })
+const phoneRegExp = /^[0-9]{6,14}$/
+
+const NewUserSchema = Yup.object().shape({
+    first_name: Yup.string().required('Name is required'),
+    last_name: Yup.string().required('Name is required'),
+    // contact_mobile: Yup.string().required('Mobile number is required').matches(/^[0-9\s]+$/, 'Only numbers are allowed for this field '),
+    contact_mobile: Yup.string()
+        .required('Phone number is required')
+        .max(18, 'Phone number is not valid')
+        .matches(phoneRegExp, 'Phone number is not valid'),
+    email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+    address: Yup.mixed().required('address is required'),
+    address1: Yup.mixed(),
+    pin: Yup.string().required('ZipCode is required').matches(/^[0-9\s]+$/, 'Only numbers are allowed for this field '),
+    country: Yup.string().required('country is required'),
+    state: Yup.string().required('State is required'),
+    city: Yup.string().required('City is required'),
+
+});
+
+
+
+
+
 
 const formatCurrency = amount => {
     return amount.toLocaleString('en-IN', { style: "currency", currency: "INR" })
@@ -28,6 +59,53 @@ const getPreviewCss = (name, size = 150,) => css({
 })
 
 const Products = () => {
+    console.log(countries);
+    const formik = useFormik({
+        enableReinitialize: true,
+        initialValues: {
+            first_name: '',
+            last_name: '',
+            contact_mobile: '',
+            address: null,
+            address1: null,
+            state: '',
+            city: '',
+            pin: '',
+        },
+        validationSchema: NewUserSchema,
+        onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
+            setSubmitting(true);
+            //   try {
+            //     let data = JSON.parse(JSON.stringify(values));
+            //     data['company_id'] = company.id;
+            //     data['created_by'] = user.id;
+            //     data['holiday'] = holiday;
+            //     data['c_code'] = data['c_code']['phone'];
+            //     dispatch(postBranch(data));
+            //     setSubmitting(false);
+            //   } catch (error) {
+            //     console.error(error);
+            //     if (isMountedRef.current) {
+            //       setErrors({ afterSubmit: error.message || err_msg });
+            //       setSubmitting(false);
+            //     }
+            //   }
+        },
+    });
+    const {
+        errors,
+        values,
+        touched,
+        handleSubmit,
+        isSubmitting,
+        setFieldValue,
+        getFieldProps,
+        setFieldTouched,
+        setValues,
+    } = formik;
+
+
+    console.log(errors)
     let [categories, setCategories] = useState([])
     let [products, setProducts] = useState([])
     let [cart, setCart] = useState({})
@@ -82,24 +160,25 @@ const Products = () => {
                     return (
                         <>
                             <Typography variant="h5" mb={4} p={3} >{category.name}</Typography>
-                            <Grid container key={category.id} spacing={4} mb={8}>
+                            <Grid container key={category.id} spacing={1} mb={8}>
                                 {products.map(product => {
                                     return (
                                         <Grid item md={3} xs={12} key={product.id}>
-                                            <Card >
-                                                <CardContent className={css({
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    alignItems: 'center'
-                                                })}>
-                                                    <div className={css({ marginRight: theme.spacing(2) })}>
-                                                        <div className={getPreviewCss(product.name, 150)} />
-                                                    </div>
-                                                    <Typography variant="h6">{product.name}</Typography>
-                                                    <Typography variant="h5" color={theme.palette.primary.main} mb={2}>{formatCurrency(product.price)} / {product.content}</Typography>
+                                            <Paper className={css({
+                                                display: 'flex',
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                padding: 4
+                                            })}>
+                                                <div className={css({ marginRight: theme.spacing(2) })}>
+                                                    <div className={getPreviewCss(product.name, 80)} />
+                                                </div>
+                                                <div>
+                                                    <Typography variant="body1">{product.name}</Typography>
+                                                    <Typography variant="body2" color={theme.palette.primary.main} mb={2}>{formatCurrency(product.price)} / {product.content}</Typography>
                                                     <Counter value={cart[product.id]?.quantity} onChange={(quantity) => addToCart(product, quantity)} />
-                                                </CardContent>
-                                            </Card>
+                                                </div>
+                                            </Paper>
                                         </Grid>
                                     )
                                 })}
@@ -161,43 +240,78 @@ const Products = () => {
                                         <Grid item md={6} sm={12}>
                                             <TextField
                                                 label="First Name"
+                                                value={values.first_name}
                                                 fullWidth
+                                                {...getFieldProps('first_name')}
+                                                error={Boolean(touched.first_name && errors.first_name)}
+                                                helperText={touched.first_name && errors.first_name}
                                             />
 
                                         </Grid>
                                         <Grid item md={6} sm={12}>
                                             <TextField
-                                                label="First Name"
+                                                label="Last Name"
+                                                value={values.last_name}
                                                 fullWidth
+                                                {...getFieldProps('last_name')}
+                                                error={Boolean(touched.last_name && errors.last_name)}
+                                                helperText={touched.last_name && errors.last_name}
                                             />
                                         </Grid>
                                     </Grid>
                                     <TextField
                                         label="Phone Number"
+                                        value={values.contact_mobile}
+                                        {...getFieldProps('contact_mobile')}
+                                        error={Boolean(touched.contact_mobile && errors.contact_mobile)}
+                                        helperText={touched.contact_mobile && errors.contact_mobile}
+
                                     />
                                     <TextField
                                         label="Email Address"
+                                        value={values.email}
+                                        {...getFieldProps('email')}
+                                        error={Boolean(touched.email && errors.email)}
+                                        helperText={touched.email && errors.email}
                                     />
                                     <TextField
                                         label="Address Line 1"
-
+                                        value={values.address}
+                                        {...getFieldProps('address')}
+                                        error={Boolean(touched.address && errors.address)}
+                                        helperText={touched.address && errors.address}
                                     />
                                     <TextField
                                         label="Address Line 2"
-
+                                        value={values.address1}
+                                        {...getFieldProps('address1')}
+                                        error={Boolean(touched.address1 && errors.address1)}
+                                        helperText={touched.address1 && errors.address1}
                                     />
                                     <TextField
                                         label="Pin Code"
+                                        value={values.pin}
+                                        {...getFieldProps('pin')}
+                                        error={Boolean(touched.pin && errors.pin)}
+                                        helperText={touched.pin && errors.pin}
                                     />
                                     <Stack spacing={4} direction={"row"} sx={{ direction: 'column' }}>
                                         <TextField
                                             label="City"
+                                            value={values.city}
                                             fullWidth
+                                            {...getFieldProps('city')}
+                                            error={Boolean(touched.city && errors.city)}
+                                            helperText={touched.city && errors.city}
                                         />
 
                                         <TextField
                                             label="State"
                                             fullWidth
+                                            value={values.state}
+                                            {...getFieldProps('state')}
+                                            error={Boolean(touched.state && errors.state)}
+                                            helperText={touched.state && errors.state}
                                         />
                                     </Stack>
                                 </Stack>
