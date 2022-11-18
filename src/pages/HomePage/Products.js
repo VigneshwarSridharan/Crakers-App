@@ -1,6 +1,6 @@
 import { css } from "@emotion/css"
 import { Box, Card, CardContent, Grid, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, TextField, Typography } from "@mui/material"
-import { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { theme } from "../../configs/theme"
 import CategoriesModel from "../../models/CategoriesModel"
 import ProductsModel from "../../models/ProductsModel"
@@ -58,7 +58,7 @@ const getPreviewCss = (name, size = 150,) => css({
     backgroundRepeat: 'no-repeat',
 })
 
-const Products = () => {
+const Products = ({openCart}) => {
     console.log(countries);
     const formik = useFormik({
         enableReinitialize: true,
@@ -142,12 +142,18 @@ const Products = () => {
             ...cart,
             [product.id]: {
                 ...product,
-                quantity
+                quantity,
+                amount: product.price * quantity
             }
         }))
     }
 
-    console.log(cart)
+    useEffect(() => {
+        sessionStorage.setItem('cart',JSON.stringify(cart))
+        if(Object.keys(cart).length){
+            openCart(true)
+        }
+    },[cart])
 
     return (
         <>
@@ -174,10 +180,10 @@ const Products = () => {
                                                     <div className={getPreviewCss(product.name, 80)} />
                                                 </div>
                                                 <div className={css({width:'100%'})}>
-                                                    <Typography variant="body1">{product.name}</Typography>
+                                                    <Typography variant="body1"><b>{product.name}</b></Typography>
                                                     <div className={css({ display: 'flex', alignItems:'center', justifyContent:'space-between' })}>
                                                         <div>
-                                                            <Typography color={"gray"}>{category.name}</Typography>
+                                                            <Typography color={"gray"} >{category.name}</Typography>
                                                             <Typography variant="body2" color={theme.palette.primary.main} mb={2}>{formatCurrency(product.price)} / {product.content}</Typography>
                                                         </div>
                                                         <div className={css({marginRight:8})}>
@@ -332,4 +338,4 @@ const Products = () => {
     )
 }
 
-export default Products
+export default React.memo(Products)
