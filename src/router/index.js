@@ -4,6 +4,7 @@ import { PAGES } from "../utils/constants";
 
 const HomePage = lazy(() => import('../pages/HomePage'))
 const ContactUsPage = lazy(() => import('../pages/ContactUsPage'))
+const CheckoutPage = lazy(() => import('../pages/CheckoutPage'))
 
 export const router = createBrowserRouter([
     {
@@ -13,5 +14,9 @@ export const router = createBrowserRouter([
     {
         path: PAGES.CONTACT_US_PAGE,
         element: <ContactUsPage />,
+    },
+    {
+        path: PAGES.CHECKOUT_PAGE,
+        element: <CheckoutPage />,
     },
 ]);
