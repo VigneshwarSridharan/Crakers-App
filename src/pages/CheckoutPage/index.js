@@ -1,8 +1,12 @@
+import CheckoutForm from "./CheckoutForm"
+import CheckoutProducts from "./CheckoutProducts"
+
 const CheckoutPage = () => {
     return (
-        <div>
-            CheckoutPage
-        </div>
+        <>
+            <CheckoutProducts />
+            <CheckoutForm />
+        </>
     )
 }
 
