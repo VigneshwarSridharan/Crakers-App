@@ -8,5 +8,6 @@ export const PAGES = {
 
 export const COLLECTIONS = {
     PRODUCTS: "products",
-    CATEGORIES: "categories"
+    CATEGORIES: "categories",
+    ORDERS: "orders"
 }
